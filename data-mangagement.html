@@ -1,0 +1,33 @@
+<head>
+<style type="text/css">
+body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}
+h1,h2,h3{line-height:1.2}
+</style>
+</head>
+
+<h1> Data Management </h1>
+
+There are two key pieces to how I manage my data: I use Syncthing to keep all my devices up to date (phone, laptop, server), and then I use several backup strategies for long-term storage.
+
+<h2> Syncthing </h2>
+
+<p>Syncthing is a cross-platform open-source file synchronization tool that works on all major platforms. It's designed to be efficient, reliable, and easy to use.</p>
+
+<p>Basically, you tell all your devices about each other (by specifying their IP, more on this later), and then you can share folders between devices. These folders are automatically updated and broadcasted whenever a change is detected. It works REALLY well.</p>
+
+<p>Some things that I use Syncthing for include: keeping all my notes up to date on all devices, keeping my plain-text files on all devices, keeping a copy of all my documents, passports etc, available offline at all times. It's really convenient.</p>
+
+<p>The main hurdle that I had to circumvent to make this work was the IP of devices: I want my phone to be able to sync to my home server, even when I'm on the go, but I don't have a static IP at home. My solution for this was to use tailscale. Tailescale creates a local VPN where I can connect my devices, and it provides a fixed IP that I can use on other services. This way, I can connect all my devices to tailscale, and then use the IP provided by tailscale to tell Syncthing how to reach the other nodes. It works really well.</p>
+
+
+<p>You can use the following steps to set this up:</p>
+
+<ul>
+  <li> Create a Tailscale account </li>
+  <li> Install Tailscale on all your devices </li>
+  <li> Connect your devices to the Tailscale network, you want tailscale running as a service all the time </li>
+  <li> Install Syncthing on all your devices </li>
+  <li> Connect all your devices to each other within Syncthing (use tcp:\\tailscaleip:22000) </li>
+  <li> Add the folders that you want to share among devices and share it with the others </li>
+  <li> Profit </li>
+</ul>

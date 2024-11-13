@@ -1,0 +1,93 @@
+
+<head>
+<style type="text/css">
+body{margin:40px auto;max-width:650px;line-height:1.6;font-size:18px;color:#444;padding:0 10px}
+h1,h2,h3{line-height:1.2}
+</style>
+</head>
+
+<p>
+Email is required to be a human in the XXI century. Even if the last email that you have sent was **never**, it still works a sort of id for web applications. People use email addresses to sign up for services, recover passwords, and more. If you ever moved from one email provider (say Yahoo) to another one (say Gmail), you know how painful it can be to suddenly realize that you have lost access to that bus company that you use only on the holidays and with it, all your miles.
+</p>
+
+<p>
+In practice, email providers have a soft lock-in on their system: you can always create a new email, and often for free, but changing all your services and notifying all your aquaintces of the change is so painful, that in practice, you *can't* change. People don't realize this until their free storage starts running up, and they face the question of start paying for a service they never intended to pay, or go through a very painful migration.
+</p>
+
+<p>
+I'm a sort of mascoquist, and I have done this too many times to count: Yahoo, Gmail, Protonmail, self-hosted, back to Gmail, Apple, and now "self-hosted". Trust me, you don't want to change this often. After all this process, now I have leaned into what I call: "one email, any hosting". The idea is somewhat simple: if I OWN the domain of my email, I can always change how my email is hosted, without loosing access to my emails.
+</p>
+
+<p>
+This can be summarized in the following steps:
+</p>
+
+<ul>
+  <li>
+    Find a domain (kiedanski.com) that you like and commit to NEVER get rid of it.
+  </li>
+  <li>
+    Find a reliable, cheap email hosting service that you can configure an use: Gmail charges $72/y per user. Purelymail charges $10/y.
+  </li>
+</ul>
+
+<p>
+You might be surprsied to find that I say that Gmail charges $72, when I previously said that it was free. This is because Gmail charges you if you want to use your own domain. The advantage of your own domain, is that if I switch from Purely to Gmail, but keep the domain, I will still get emails at the same address. The downside is that I need to pay for my domain name forever, but I would recommend everyone to own at least one: they are quite useful.
+</p>
+
+<p>
+This is not for everyone, but if you are interested in having a more fine-grained control over your data and daily technological stack, you might end up down this route anyway.
+</p>
+
+<p>
+In what follows I will describe how to configure Namecheap + Purelymail. This is for you, the reader, but mostly for my future self, that will need this information but won't remember how to do it.
+</p>
+
+<p>
+I'm assuming that you already have your own domain name, and that you have access to the portal where you can configure it: Namecheap in my case.
+</p>
+
+<h2>Creating a Purely account</h2>
+
+Go to their website and create a <a href="https://purelymail.com/signup/">new account</a>. This will get you a something@purelymail.com. This can be confusing because we want our own branded email, but despair not, this is normal. You will only need this email to configure your Purelymail account. I strongly encourage you to choose a strong password and save it in a password manager.
+
+<h2>Configuring your email account</h2>
+
+Log in using your @purelymail.com email and password, and navigate to "Domains - Add a new domain". This part is tricky if you have never done it before.
+
+Open Namecheap, or your domain provider, navigate to your confguration, and search for something akin to configure DNS records. In your domain provider, we need to add all the records provided by Purelymail. This is a way to tell your domain provider that purelymail has the rights to send emails using that domain.
+
+This is a list of records that you should add:
+
+<ul>
+	<li> MX </li>
+	<li> TXT (SPF) </li>
+	<li> TXT (Ownership) </li>
+	<li> CNAME (DKIM 1) </li>
+	<li> CNAME (DKIM 2) </li>
+	<li> CNAME (DKIM 3) </li>
+	<li> CNAME (DMARC) </li>
+</ul>
+
+In my experience, this process is often quirky, and it takes a couple of attempts to get it right. Purelymail will let you know once it finds the appropiate configuration on DNS servers, and is ready to proceed. Keep in mind that DNS records take some time to propagate, so it could take several minutes for a "good configuration" to be detected by Purelymail.
+
+<h2>Create a new user in Purelymail using your domain</h2>
+
+Once you have linked your domain with your Purelymail account, then you need to instruct Purelymail to redirect all emails to an actual email address. You can use the @purelymail address that you have already created, and this is what I did at first.
+
+The problem with that setup is that when you try to log-in into other services, it is somewhat tricky to configure them: your username look like an email address (@purelymail) but your actual email address is different @yourdomain.
+
+The workaround that I'm using now is to create a new user from Purelymail's dashboard and use your intented email as the id of that new user, e.g. myname@mydomain.
+
+If you do this, you will have two different users in Purelymail: the @purelymail for admin operations and the @mydomain for checking your email online.
+
+<h2> Configuring your new account </h2>
+
+Login with your @purelymail admin account and head to "Routing". 
+
+There, you can specify how emails will flow. At the most basic level, you should define that all addresses that match "myname" are sent to myname@mydomain.
+
+<h2> Using your new email </h2>
+
+Your new account is ready to use. You can login into the roundcube Webmail provided by Purelymail. Better yet, you can use it in your preferred mail client: Thunderbird, Superhuman, or what I'm currently driving: neomutt.
+
