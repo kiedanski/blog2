@@ -1,0 +1,54 @@
+<h1 id="detect-hierarchy-using-formula">Detect hierarchy using formula</h1>
+<p>We are giving an subset of an Excel table and our objective is to &quot;extract&quot; a hierarchy relationship among rows based on provided formulas.</p>
+<p>The input is an Nx4 table with the following columns:</p>
+<ul>
+<li>Column A: contains the original row number of each sheet (1, 15, 26, etc)</li>
+<li>Column B: contains the &quot;name&quot; or &quot;content&quot; of the row.</li>
+<li>Column C: contains a numeric value for the row &quot;value&quot;</li>
+<li>Column D: contains a formula used to calculate the numeric value, or is blank if no formula was involved.</li>
+</ul>
+<p>We will assume that formulas will involve nested operations, ranges (within the same sheet), and sums.</p>
+<p>Example formulas:</p>
+<ul>
+<li>=SUM(A1:A10)</li>
+<li>=ROUND(SUM(B1:B3) + B7, 1)</li>
+</ul>
+<h2 id="hierarchy-definition">Hierarchy Definition</h2>
+<p>We say that <code>Row X</code> is the parent of <code>Row Y</code> if <code>Y</code> is <code>included</code> in <code>Row X</code> formula.
+Formulas might use different columns <code>A1:A10</code>, <code>C5 - C6</code>. For hierarchy purposes, we only care about rows, and can disregard the column name.
+If <code>Row X</code> has parents <code>Row Y</code> and <code>Row Z</code> but <code>Row Y</code> is the children of <code>Row Z</code>, then <code>Row X</code> has parent <code>Row Y</code> and <code>Row Y</code> keeps <code>Row Z</code> as it parent.
+A row can have only one parent, if multiple parents are found, and there is no relationship between them (as above), we should raise an error.</p>
+<p>Examples: </p>
+<ul>
+<li>If <code>Row X</code> formula is <code>=SUM(A1:A5) - A11</code>, rows 1, 2, 3, 4, 5, and 11 are children of row <code>X</code>.</li>
+<li>If <code>Row 10</code> formula is <code>=SUM(C1:C10)</code> and <code>Row 20</code> formula is <code>=SUM(C1:C20)</code>  then: <code>Row 3</code> is a children of <code>Row 10</code> and <code>Row 10</code> is a children of <code>Row 20</code>.</li>
+</ul>
+<h2 id="output">Output</h2>
+<p>The output should be a Nx1 table where each row has the row number of the parent, or is empty if no parent was found.</p>
+<h2 id="implementation-details">Implementation Details</h2>
+<ol>
+<li>Have a function that given a formula, calculates all of its children (1 function for this)</li>
+<li>Map each row number to a list of all of its children</li>
+<li>Propagate potential parents to each row (1 function for this)</li>
+<li>Resolve any potential &quot;multi-parent&quot;, start for the &quot;top of the hierarchy&quot; to prevent issues.</li>
+<li><p>Return the list of parents (if any) for each row.</p>
+</li>
+<li><p>We expect this to be wrapped as a single function: &quot;detect_hierarchies_from_formula&quot;</p>
+</li>
+</ol>
+<p>OBS: Beware of mixing &quot;the row number column&quot; with the actual row number, which are potentially different!</p>
+<h2 id="testing-guidelines">Testing Guidelines</h2>
+<ol>
+<li>Create 2 sample tables, one with 5 rows, another with 10. Both should have formulas with mixed letters (B1:B5) and (D7 + D8) in the same table.</li>
+<li>One table should have a children with 2 parents, but those parents should be one children of another. Therefore, a solution should exist.</li>
+<li>Use pytest and place the tests in tests/transformations/detect_hierarchy</li>
+<li>Don&#39;t mock any of the functions.</li>
+</ol>
+<h1 id="after-the-fact-notes">After the fact notes</h1>
+<ul>
+<li>Flew to close to the sun, kept asking things that were not very well specified in the TASK above and started making errors</li>
+<li>For some reason Claude tried to use a subagent that hid most of the thinking. Not great.</li>
+<li>Generating formulas for testing caused some issues with pandas not reading them properly.</li>
+<li>Overall, should not have tried to continue going and instead close this as a standalone PR.</li>
+</ul>
+
