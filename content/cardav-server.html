@@ -1,0 +1,32 @@
+<h1> Cardav Server </h1>
+
+<p>
+Keeping track of contacts does not sound like much, but it is very ingrained in
+all Google's and Apple's offerings. Most applications rely on this, and if you
+are not using Facebook, you better track your friend's birthday's in an app.
+</p>
+
+<p>
+Most contacts and calendar applicaitons rely on widely use protocols to store
+and transfer information: CardDav for contacts and CalDav for calendar events.
+You need a server running these two protocols, and a way to have your devices
+access them and you can replace your default big tech alternatives.
+</p>
+
+<p>
+The hardest part about this process is deciding which implementation to use, and
+where to deploy it. I ran a home server that I can access remotely using
+Tailscale, so this was not a problem to me. It took me a bit longer to decide
+which application to use. Radicale is recommened quite often in the web, same as
+Baikal. I started going the Radicale route, but I ran into some issues when I
+tried to sync to my linux laptop - the program that I was using for sync
+complained that Radicale's implemntation was not "complete" and lacked features.
+In the end I ended up going for Xandikos behind an Ngix proxy. 
+</p>
+
+<p>
+Uploading my contacts was not hard. I configured the new account on my phone,
+exported my current contacts as a .vfc file, and re-imported it into the new
+account. This worked like a charm. I'm still in the inital stages of using
+Xandikos but thus far it seems to be working quite well.
+</p>
